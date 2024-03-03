@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<populations>
+  <population Name="strategineer_AdoringFan_Mages">
+    <group Name="Mages" Style="pickone">
+      <object Number="1" Blueprint="strategineer_AdoringFan_Fire Mage" />
+      <object Number="1" Blueprint="strategineer_AdoringFan_Ice Mage" />
+    </group>
+  </population>
+
+  <population Name="SnapjawParty0" Load="Merge">
+    <group Name="Creatures" Load="Merge">
+      <table Name="strategineer_AdoringFan_Mages" />
+    </group>
+  </population>
+
+  <population Name="SnapjawParty1" Load="Merge">
+    <group Name="Creatures" Load="Merge">
+      <table Name="strategineer_AdoringFan_Mages" />
+    </group>
+  </population>
+
+  <population Name="SnapjawParty1-with-Warlord" Load="Merge">
+    <group Name="Creatures" Load="Merge">
+      <table Name="strategineer_AdoringFan_Mages" />
+    </group>
+  </population>
+
+  <population Name="SnapjawParty0" Load="Merge">
+    <group Name="Creatures" Load="Merge">
+      <table Name="strategineer_AdoringFan_Mages" />
+    </group>
+  </population>
+</populations>
