@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<conversations>
+  <conversation ID="AdoringFan">
+    <node ID="Start">
+      <text>
+        Wow! You're the Grand Champion! I saw your fight against the Gray Prince! You're the best! Can I... Can I follow you around? I won't get in the way!~
+        By Azura, by Azura, by Azura! It's the Grand Champion! I can't believe it's you! Standing here! Next to me!~
+        Yes, oh great and mighty Grand Champion? Is there something you need? Can I carry your weapon? Shine your boots? Backrub, perhaps?
+      </text>
+      <choice GotoID="FollowMe">Follow me.</choice>
+      <choice GotoID="PleaseLeaveMeBe">Please leave me be.</choice>
+      <choice GotoID="End">Live and drink.</choice>
+    </node>
+    <node ID="PleaseLeaveMeBe">
+      <text>
+        Aw gee! You sure? Okay, well, I'll be hanging around the Arena grounds if you need someone to worship the ground you walk on. Bye!
+      </text>
+      <choice GotoID="End">Live and drink.</choice>
+    </node>
+    <node ID="FollowMe">
+      <text>
+        Golly, you're the best! I'm going to follow you and watch you and worship the ground you walk on! Let's go!
+      </text>
+      <choice GotoID="End">Live and drink.</choice>
+    </node>
+  </conversation>
+</conversation>
