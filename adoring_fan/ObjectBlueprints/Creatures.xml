@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <objects>
   <object Name="strategineer_AdoringFan_Adoring Fan" Inherits="BaseHumanoid">
-    <part Name="Description" Short="=pronouns.Possessive= unkempt hair juts out in all directions, giving them an endearing, almost comical appearance. With every movement, =pronouns.subjective= emit an enthusiastic chatter, their voice rising above the din of the cavern. =pronouns.Subjective= seem oblivious to danger, =pronouns.objective= unwavering devotion to their 'champion' evident in every word and gesture." />
+    <part Name="Description" Short="=pronouns.Possessive= unkempt hair juts out in all directions, giving =pronouns.objective= an endearing, almost comical appearance. With every movement, =pronouns.subjective= emits an enthusiastic chatter, =pronouns.possessive= voice rising above the din of the cavern. =pronouns.Subjective= seems oblivious to danger, =pronouns.possessive= unwavering devotion to =pronouns.possessive= 'champion' evident in every word and gesture." />
     <part Name="Render" DisplayName="adoring fan" Tile="strategineer_AdoringFan/adoring_fan.png" ColorString="&amp;O" DetailColor="Y" />
     <part Name="ConversationScript" ConversationID="AdoringFan" />
     <part Name="Brain" Factions="Playerneutral-100" />
-
+    
+    <tag Name="Gender" Value="male" />
     <tag Name="Adoring Fan" />
     <tag Name="InventoryPopulationTable" Value="HumanoidEquipment Broad" />
   </object>
