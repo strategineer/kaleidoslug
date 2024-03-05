@@ -1,0 +1,6 @@
+
+<?xml version="1.0" encoding="utf-8" ?>
+<options>
+  <option ID="Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory" DisplayText="Enable Test"
+    Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
+</options>
