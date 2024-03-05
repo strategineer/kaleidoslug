@@ -18,6 +18,31 @@ namespace Strategineer.GigaChadUX.HarmonyPatches
     public static bool EnableAutoReload => Options.GetOption("Option_Strategineer_GigaChadUX_EnableAutoReload", "Yes").EqualsNoCase("Yes");
     public static bool EnableUnsafeMode => Options.GetOption("Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory", "Yes").EqualsNoCase("Yes");
 
+    public static bool HasAmmoInInventory(GameObject obj)
+    {
+      List<XRL.World.GameObject> missileWeapons = obj.GetMissileWeapons();
+      if (missileWeapons != null && missileWeapons.Count > 0)
+      {
+        int m = 0;
+        for (int count2 = missileWeapons.Count; m < count2; m++)
+        {
+          if (missileWeapons[m].GetPart("MissileWeapon") is MissileWeapon missileWeapon)
+          {
+            if (missileWeapons[m].GetPart("MagazineAmmoLoader") is MagazineAmmoLoader magazineAmmoLoader)
+            {
+              foreach (GameObject item in obj.GetInventory())
+              {
+                if (magazineAmmoLoader.IsValidAmmo(item))
+                {
+                  return true;
+                }
+              }
+            }
+          }
+        }
+      }
+      return false;
+    }
     public static void ReloadMissileWeaponIfNeeded(GameObject obj)
     {
       if (!obj.IsPlayer()) { return; }
@@ -37,7 +62,7 @@ namespace Strategineer.GigaChadUX.HarmonyPatches
             }
           }
         }
-        if (!anyWeaponReadyToFire)
+        if (!anyWeaponReadyToFire && HasAmmoInInventory(obj))
         {
           CommandReloadEvent.Execute(obj);
         }
