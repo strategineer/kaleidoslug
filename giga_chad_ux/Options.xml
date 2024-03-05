@@ -4,4 +4,11 @@
     Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
   <option ID="Option_Strategineer_GigaChadUX_EnableAutoReload" DisplayText="Enable automatic reloading of missile weapons when exploring"
     Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
+
+  <option ID="Option_Strategineer_GigaChadUX_EnableSetDefaultPouringVolume" DisplayText="Enable changing of the number of drams to pour from containers by default"
+    Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
+  <option ID="Option_Strategineer_GigaChadUX_NumbersOfDramsToPourByDefault" 
+   Requires="Option_Strategineer_GigaChadUX_EnableSetDefaultPouringVolume==Yes" DisplayText="Number of drams to pour by default (helps when putting yourself out)"
+    Category="Strat's Mods" Type="Combo" Values="0,4,8,12,16,20,24,28,32,36,40,44,48,52,56,60,64" Default="4"></option>
+    
 </options>

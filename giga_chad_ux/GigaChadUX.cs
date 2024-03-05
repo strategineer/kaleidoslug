@@ -18,6 +18,8 @@ namespace Strategineer.GigaChadUX.HarmonyPatches
     public static bool EnableAutoReload => Options.GetOption("Option_Strategineer_GigaChadUX_EnableAutoReload", "Yes").EqualsNoCase("Yes");
     public static bool EnableUnsafeMode => Options.GetOption("Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory", "Yes").EqualsNoCase("Yes");
 
+    public static bool EnableSetDefaultPouringVolume => Options.GetOption("Option_Strategineer_GigaChadUX_EnableSetDefaultPouringVolume", "No").EqualsNoCase("Yes");
+    public static int NumbersOfDramsToPourByDefault => Int32.Parse(Options.GetOption("Option_Strategineer_GigaChadUX_NumbersOfDramsToPourByDefault", "64"));
     public static bool HasAmmoInInventory(GameObject obj)
     {
       List<XRL.World.GameObject> missileWeapons = obj.GetMissileWeapons();
@@ -86,6 +88,20 @@ namespace Strategineer.GigaChadUX.HarmonyPatches
     }
   }
 
+  [HarmonyPatch(typeof(XRL.UI.Popup))]
+  class SetDefaultVolumePercentageWhenPouring
+  {
+    [HarmonyPrefix]
+    [HarmonyPatch("AskNumber")]
+    static void Prefix(string Message, ref int Start, int Max)
+    {
+      if (Helpers.EnableSetDefaultPouringVolume && Message.Contains("How many drams?"))
+      {
+        int old = Start;
+        Start = Math.Min(Helpers.NumbersOfDramsToPourByDefault, Max);
+      }
+    }
+  }
   [HarmonyPatch(typeof(XRL.UI.Popup))]
   class LastSelectedOptionShouldBeTheDefault
   {
