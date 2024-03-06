@@ -3,12 +3,7 @@ using System.Collections.Generic;
 
 using HarmonyLib;
 
-using XRL;
-using XRL.World;
-using XRL.Core;
 using XRL.UI;
-using XRL.World.Parts;
-using XRL.World.Capabilities;
 
 namespace Strategineer.GigaChadUX.OptionListUX
 {
@@ -17,7 +12,7 @@ namespace Strategineer.GigaChadUX.OptionListUX
     public static bool EnableUnsafeMode => Options.GetOption("Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory", "Yes").EqualsNoCase("Yes");
   }
 
-  [HarmonyPatch(typeof(XRL.UI.Popup))]
+  [HarmonyPatch(typeof(Popup))]
   class LastSelectedOptionShouldBeTheDefault
   {
     // todo: figure out why this option is not appearing in the options menu

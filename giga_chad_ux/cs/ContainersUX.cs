@@ -3,12 +3,7 @@ using System.Collections.Generic;
 
 using HarmonyLib;
 
-using XRL;
-using XRL.World;
-using XRL.Core;
 using XRL.UI;
-using XRL.World.Parts;
-using XRL.World.Capabilities;
 
 namespace Strategineer.GigaChadUX.ContainersUX
 {
@@ -19,14 +14,16 @@ namespace Strategineer.GigaChadUX.ContainersUX
   }
 
 
-  [HarmonyPatch(typeof(XRL.UI.Popup))]
+  [HarmonyPatch(typeof(Popup))]
   class SetDefaultVolumePercentageWhenPouring
   {
     [HarmonyPrefix]
     [HarmonyPatch("AskNumber")]
     static void Prefix(string Message, ref int Start, int Max)
     {
-      if (Helpers.EnableSetDefaultPouringVolume && Message.Contains("How many drams?"))
+      if (Helpers.EnableSetDefaultPouringVolume &&
+      Message.Contains("How many drams?") &&
+      Start == 64)
       {
         int old = Start;
         Start = Math.Min(Helpers.NumbersOfDramsToPourByDefault, Max);

@@ -19,7 +19,7 @@ namespace Strategineer.GigaChadUX.AutoReloadingUX
     public static bool EnableAutoReload => Options.GetOption("Option_Strategineer_GigaChadUX_EnableAutoReload", "Yes").EqualsNoCase("Yes");
     public static bool HasAmmoInInventory(GameObject obj)
     {
-      List<XRL.World.GameObject> missileWeapons = obj.GetMissileWeapons();
+      List<GameObject> missileWeapons = obj.GetMissileWeapons();
       if (missileWeapons != null && missileWeapons.Count > 0)
       {
         int m = 0;
@@ -45,7 +45,7 @@ namespace Strategineer.GigaChadUX.AutoReloadingUX
     public static void ReloadMissileWeaponIfNeeded(GameObject obj)
     {
       if (!obj.IsPlayer()) { return; }
-      List<XRL.World.GameObject> missileWeapons = obj.GetMissileWeapons();
+      List<GameObject> missileWeapons = obj.GetMissileWeapons();
       if (missileWeapons != null && missileWeapons.Count > 0)
       {
         bool anyWeaponReadyToFire = false;
