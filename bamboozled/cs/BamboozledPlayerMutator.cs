@@ -10,7 +10,7 @@ namespace Strategineer.BamboozleMode
   public class Bamboozled : Confused
   {
     public Bamboozled()
-      : base(Int32.MaxValue, 1, 1)
+      : base(Int32.MaxValue, 1, 0)
     {
       this.DisplayName = "{{K-C-m-M-r-c-CK|bamboozled}}";
     }
