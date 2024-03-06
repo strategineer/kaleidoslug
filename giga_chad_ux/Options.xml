@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <options>
-  <option ID="Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory" DisplayText="Enable remembering of last selected option for all option menus"
+  <option ID="Option_Strategineer_GigaChadUX_EnableUnsafeOptionListMemory" DisplayText="Enable remembering of last selected option for all option list menus"
     Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
-  <option ID="Option_Strategineer_GigaChadUX_EnableAutoReload" DisplayText="Enable automatic reloading of missile weapons when exploring"
+  <option ID="Option_Strategineer_GigaChadUX_EnableAutoReload" DisplayText="Enable reloading of missile weapons when exploring/waiting"
     Category="Strat's Mods" Type="Checkbox" Default="Yes"></option>
 
   <option ID="Option_Strategineer_GigaChadUX_EnableSetDefaultPouringVolume" DisplayText="Enable changing of the number of drams to pour from containers by default"

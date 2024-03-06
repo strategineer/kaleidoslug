@@ -76,8 +76,10 @@ namespace Strategineer.GigaChadUX.AutoReloadingUX
     static void Prefix()
     {
       if (Helpers.EnableAutoReload &&
-      (AutoAct.IsAnyExploration() || AutoAct.IsAnyResting() || AutoAct.IsAnyGathering()))
+      !AutoAct.IsAnyCombat() &&
+      (AutoAct.IsAnyExploration() || AutoAct.IsAnyResting()))
       {
+        //XRL.Messages.MessageQueue.AddPlayerMessage($"Trying to reload due to AutoAct.GetDescription():{AutoAct.GetDescription()}, AutoAct.IsAnyExploration():{AutoAct.IsAnyExploration()}, AutoAct.IsAnyResting():{AutoAct.IsAnyResting()}, AutoAct.IsAnyGathering(){AutoAct.IsAnyGathering()}, AutoAct.IsAnyCombat(){AutoAct.IsAnyCombat()}");
         Helpers.ReloadMissileWeaponIfNeeded(The.Player);
       }
     }
