@@ -1,0 +1,9 @@
+{
+    "id": "Strategineer_TimedDailyRuns",
+    "title": "{{B|Timed Daily Runs}}",
+    "description": "Limit yourself to playing daily runs with a real-time time limit.",
+    "version": "0.1.0",
+    "author": "strategineer",
+    "tags": "World",
+    "PreviewImage": "preview.png"
+}
