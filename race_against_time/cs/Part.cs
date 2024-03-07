@@ -11,15 +11,25 @@ namespace Strategineer.RaceAgainstTime
   [Serializable]
   public class RaceAgainstTimePart : IPart
   {
+    public bool hasAttemptedToKillThePlayerCharacter = false;
     public bool hasEverWarned = false;
     private bool hasWarnedOnce = false;
-    private Stopwatch stopWatch = new Stopwatch();
+    private Stopwatch stopwatch = new Stopwatch();
     private Stopwatch lastWarnStopWatch = new Stopwatch();
     public TimeSpan totalTime;
     public TimeSpan elapsedTime;
     // todo add option to choose between popups or text messages in thee log
     // todo pause the timer when the game is paused
     private int lastMinuteWarned = int.MaxValue;
+
+    public void StartStopwatch()
+    {
+      stopwatch.Start();
+    }
+    public void StopStopwatch()
+    {
+      stopwatch.Stop();
+    }
 
     public RaceAgainstTimePart()
     {
@@ -29,14 +39,15 @@ namespace Strategineer.RaceAgainstTime
 
     public void UpdateElapsedTime()
     {
-      elapsedTime = elapsedTime + stopWatch.Elapsed;
-      stopWatch.Restart();
+      elapsedTime += stopwatch.Elapsed;
+      stopwatch.Restart();
     }
 
     public bool ShouldWarnAgain()
     {
       return !hasWarnedOnce ||
-      (lastMinuteWarned != TimeLeft().Minutes &&
+      (!hasAttemptedToKillThePlayerCharacter &&
+      lastMinuteWarned != TimeLeft().Minutes &&
       TimeLeft().Minutes % Int32.Parse(Options.GetOption("Option_Strategineer_RaceAgainstTime_MinutesBetweenWarnings")) == 0);
     }
 
@@ -56,7 +67,7 @@ namespace Strategineer.RaceAgainstTime
       lastWarnStopWatch.Restart();
       hasEverWarned = true;
       hasWarnedOnce = true;
-      stopWatch.Stop();
+      stopwatch.Stop();
       if (StratOptions.EnablePopupWarnings)
       {
         Popup.Show(msg);
@@ -65,7 +76,7 @@ namespace Strategineer.RaceAgainstTime
       {
         XRL.Messages.MessageQueue.AddPlayerMessage(msg);
       }
-      stopWatch.Start();
+      stopwatch.Start();
     }
 
     public void WarnIfNeeded()
@@ -76,11 +87,16 @@ namespace Strategineer.RaceAgainstTime
       {
         Warn($"You have {FormatTimeLeft()} (hours:minutes) left on the clock.\n\nBEWARE, when the timer runs out your character will die..\n\nFeel free to save and quit and come back later (that'll pause the timer).\n\nLet me know if you find any bugs!\n\n- strategineer");
       }
-      else if (timeLeft.TotalMinutes <= 0)
+      else if (!hasAttemptedToKillThePlayerCharacter &&
+      timeLeft.TotalHours <= 0)
       {
         Warn($"Time's up...\n\nGlad you made it this far.\n\nSending you to the shadow realm ASAP.");
+        hasAttemptedToKillThePlayerCharacter = true;
         // todo change the death to something else because being decapitated is an achievement
-        Axe_Decapitate.Decapitate(The.Player, The.Player);
+        if (StratOptions.EnableKillPlayerCharacterWhenTimerRunsOut)
+        {
+          Axe_Decapitate.Decapitate(The.Player, The.Player);
+        }
       }
       else if (ShouldWarnAgain())
       {
@@ -112,7 +128,7 @@ namespace Strategineer.RaceAgainstTime
 
     public override bool HandleEvent(BeforeDieEvent E)
     {
-      stopWatch.Stop();
+      stopwatch.Stop();
       return base.HandleEvent(E);
     }
 
