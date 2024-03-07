@@ -56,9 +56,47 @@ namespace Strategineer.RaceAgainstTime
       return totalTime - elapsedTime;
     }
 
-    public string FormatTimeLeft()
+    public string FormatTimeLeft(bool friendly = true)
     {
-      return TimeLeft().ToString(@"h\:mm");
+      TimeSpan timeLeft = TimeLeft();
+      if (!friendly)
+      {
+        if (timeLeft < TimeSpan.Zero)
+        {
+          return "BEEP BEEP BEEP";
+        }
+        if (timeLeft.Hours == 0)
+        {
+          if (timeLeft.Minutes == 0)
+          {
+            return $"{timeLeft.Seconds}s";
+          }
+          else
+          {
+            return $"{timeLeft.Minutes}min";
+          }
+        }
+        return timeLeft.ToString(@"h\:mm");
+      }
+      string hour_noun = timeLeft.Hours == 1 ? "hour" : "hours";
+      string minute_noun = timeLeft.Minutes == 1 ? "minute" : "minutes";
+      string second_noun = timeLeft.Seconds == 1 ? "second" : "seconds";
+      if (timeLeft.Minutes == 0 && timeLeft.Seconds == 0)
+      {
+        return $"{timeLeft.Hours} {hour_noun}";
+      }
+      if (timeLeft.Hours == 0 && timeLeft.Minutes == 0)
+      {
+        return $"{timeLeft.Seconds} {second_noun}";
+      }
+      if (timeLeft.Hours == 0 && timeLeft.Seconds == 0)
+      {
+        return $"{timeLeft.Minutes} {minute_noun}";
+      }
+      else
+      {
+        return $"{timeLeft.Hours} {hour_noun} and {timeLeft.Minutes} {minute_noun}";
+      }
     }
 
     public void Warn(string msg)
@@ -85,29 +123,26 @@ namespace Strategineer.RaceAgainstTime
       TimeSpan timeLeft = totalTime - elapsedTime;
       if (!hasEverWarned)
       {
-        Warn($"You have {FormatTimeLeft()} (hours:minutes) left on the clock.\n\nBEWARE, when the timer runs out your character will die..\n\nFeel free to save and quit and come back later (that'll pause the timer).\n\nLet me know if you find any bugs!\n\n- strategineer");
+        Warn($"Tick Tock... Tick Tock...\n\nA sturdy collar tugs at your neck.\n\n\"You have {FormatTimeLeft()} left on the clock, don't disappoint us, we're watching you.\"");
       }
       else if (!hasAttemptedToKillThePlayerCharacter &&
       timeLeft.TotalHours <= 0)
       {
-        Warn($"Time's up...\n\nGlad you made it this far.\n\nSending you to the shadow realm ASAP.");
         hasAttemptedToKillThePlayerCharacter = true;
         // todo change the death to something else because being decapitated is an achievement
         if (StratOptions.EnableKillPlayerCharacterWhenTimerRunsOut)
         {
+          Warn($"The beeping from the collar stops, only to be replaced by a loud electrical humming. \n\n\"Thank you for your service.\"");
           Axe_Decapitate.Decapitate(The.Player, The.Player);
+        }
+        else
+        {
+          Warn($"The collar at your neck loosens and falls to the ground.\n\n\"Thank you for your service, that was a pleasant surprise. We'll be in touch.\"");
         }
       }
       else if (ShouldWarnAgain())
       {
-        if (timeLeft.Minutes < 5)
-        {
-          Warn($"{FormatTimeLeft()} left...\n\nWrap it up!");
-        }
-        else
-        {
-          Warn($"{FormatTimeLeft()} left...\n\nGood Luck!");
-        }
+        Warn($"{FormatTimeLeft()} left...\n\n");
       }
     }
 

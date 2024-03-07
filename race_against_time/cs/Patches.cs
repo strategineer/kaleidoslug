@@ -49,7 +49,7 @@ The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
         The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
         {
           // todo only do this if the time has changed
-          __instance.PlayerNameText.SetText(part.FormatTimeLeft());
+          __instance.PlayerNameText.SetText(part.FormatTimeLeft(false));
         }
       }
     }
