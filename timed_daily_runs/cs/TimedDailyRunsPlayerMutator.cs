@@ -1,6 +1,11 @@
 using System;
+using System.Text;
+using System.Reflection;
 using System.Diagnostics;
 
+using HarmonyLib;
+
+using Qud.UI;
 using XRL;
 using XRL.UI;
 using XRL.World;
@@ -8,8 +13,24 @@ using XRL.World.Parts.Skill;
 
 namespace Strategineer.TimedDailyRuns
 {
+  [HarmonyPatch(typeof(PlayerStatusBar), "Update")]
+  class AddPatch
+  {
+    [HarmonyPostfix]
+    static void Postfix(PlayerStatusBar __instance)
+    {
+      if (The.Player != null &&
+      The.Player.GetPart("TimedDailyRunsPart") is TimedDailyRunsPart part)
+      {
+        // todo only do this if the time has changed
+        string txt = part.FormatTimeLeft();
+        __instance.PlayerNameText.SetText(txt);
+      }
+    }
+  }
+
   [Serializable]
-  public class TimeDailyRunsPart : IPart
+  public class TimedDailyRunsPart : IPart
   {
     public bool hasEverWarned = false;
     private bool hasWarnedOnce = false;
@@ -17,20 +38,18 @@ namespace Strategineer.TimedDailyRuns
     private Stopwatch lastWarnStopWatch = new Stopwatch();
     public TimeSpan totalTime;
     public TimeSpan elapsedTime;
-    // todo implement option for this
     // todo add option to choose between popups or text messages in thee log
     // todo pause the timer when the game is paused
-    // todo show the timer in the UI, in the top bar
-    private int minutesBetweenWarnings = 15;
     private int lastMinuteWarned = int.MaxValue;
 
-    public TimeDailyRunsPart()
+    public TimedDailyRunsPart()
     {
       lastWarnStopWatch.Start();
       int hours = Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_TimeLimitHours"));
       int minutes = Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_TimeLimitMinutes"));
-      int seconds = Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_TimeLimitSeconds"));
+      int seconds = 0;
       totalTime = new TimeSpan(hours, minutes, seconds);
+
       elapsedTime = new TimeSpan(0, 0, 0);
     }
 
@@ -44,7 +63,7 @@ namespace Strategineer.TimedDailyRuns
     {
       return !hasWarnedOnce ||
       (lastMinuteWarned != TimeLeft().Minutes &&
-      TimeLeft().Minutes % minutesBetweenWarnings == 0);
+      TimeLeft().Minutes % Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_MinutesBetweenWarnings")) == 0);
     }
 
     public TimeSpan TimeLeft()
@@ -54,19 +73,7 @@ namespace Strategineer.TimedDailyRuns
 
     public string FormatTimeLeft()
     {
-      TimeSpan timeLeft = TimeLeft();
-      if (totalTime.Hours != 0)
-      {
-        return $"{timeLeft.Hours}:{timeLeft.Minutes}:{timeLeft.Seconds} (hours/minutes/seconds)";
-      }
-      else if (totalTime.Minutes != 0)
-      {
-        return $"{timeLeft.Minutes}:{timeLeft.Seconds} (minutes/seconds)";
-      }
-      else
-      {
-        return $"{timeLeft.Seconds} (seconds)";
-      }
+      return TimeLeft().ToString(@"h\:mm");
     }
 
     public void WarnWithPopup(string msg)
@@ -82,10 +89,6 @@ namespace Strategineer.TimedDailyRuns
 
     public void WarnIfNeeded()
     {
-      if (!stopWatch.IsRunning)
-      {
-        stopWatch.Start();
-      }
       UpdateElapsedTime();
       // todo this should be in some kind of update/render method?
       TimeSpan timeLeft = totalTime - elapsedTime;
@@ -116,12 +119,6 @@ namespace Strategineer.TimedDailyRuns
     {
       UpdateElapsedTime();
       base.SaveData(Writer);
-    }
-
-    public override void LoadData(SerializationReader Reader)
-    {
-      stopWatch.Restart();
-      base.LoadData(Reader);
     }
 
     public override bool WantEvent(int ID, int cascade)
@@ -158,7 +155,7 @@ namespace Strategineer.TimedDailyRuns
     {
       if (The.Game.gameMode == "Daily")
       {
-        player.AddPart<TimeDailyRunsPart>();
+        player.AddPart<TimedDailyRunsPart>();
       }
     }
   }
