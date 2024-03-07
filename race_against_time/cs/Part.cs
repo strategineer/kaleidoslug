@@ -1,36 +1,15 @@
 using System;
-using System.Text;
-using System.Reflection;
 using System.Diagnostics;
 
-using HarmonyLib;
-
-using Qud.UI;
 using XRL;
 using XRL.UI;
 using XRL.World;
 using XRL.World.Parts.Skill;
 
-namespace Strategineer.TimedDailyRuns
+namespace Strategineer.RaceAgainstTime
 {
-  [HarmonyPatch(typeof(PlayerStatusBar), "Update")]
-  class AddPatch
-  {
-    [HarmonyPostfix]
-    static void Postfix(PlayerStatusBar __instance)
-    {
-      if (The.Player != null &&
-      The.Player.GetPart("TimedDailyRunsPart") is TimedDailyRunsPart part)
-      {
-        // todo only do this if the time has changed
-        string txt = part.FormatTimeLeft();
-        __instance.PlayerNameText.SetText(txt);
-      }
-    }
-  }
-
   [Serializable]
-  public class TimedDailyRunsPart : IPart
+  public class RaceAgainstTimePart : IPart
   {
     public bool hasEverWarned = false;
     private bool hasWarnedOnce = false;
@@ -42,14 +21,9 @@ namespace Strategineer.TimedDailyRuns
     // todo pause the timer when the game is paused
     private int lastMinuteWarned = int.MaxValue;
 
-    public TimedDailyRunsPart()
+    public RaceAgainstTimePart()
     {
-      lastWarnStopWatch.Start();
-      int hours = Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_TimeLimitHours"));
-      int minutes = Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_TimeLimitMinutes"));
-      int seconds = 0;
-      totalTime = new TimeSpan(hours, minutes, seconds);
-
+      totalTime = new TimeSpan(StratOptions.TimeLimitHours, StratOptions.TimeLimitMinutes, 0);
       elapsedTime = new TimeSpan(0, 0, 0);
     }
 
@@ -63,7 +37,7 @@ namespace Strategineer.TimedDailyRuns
     {
       return !hasWarnedOnce ||
       (lastMinuteWarned != TimeLeft().Minutes &&
-      TimeLeft().Minutes % Int32.Parse(Options.GetOption("Option_Strategineer_TimedDailyRuns_MinutesBetweenWarnings")) == 0);
+      TimeLeft().Minutes % Int32.Parse(Options.GetOption("Option_Strategineer_RaceAgainstTime_MinutesBetweenWarnings")) == 0);
     }
 
     public TimeSpan TimeLeft()
@@ -76,29 +50,35 @@ namespace Strategineer.TimedDailyRuns
       return TimeLeft().ToString(@"h\:mm");
     }
 
-    public void WarnWithPopup(string msg)
+    public void Warn(string msg)
     {
       lastMinuteWarned = TimeLeft().Minutes;
       lastWarnStopWatch.Restart();
       hasEverWarned = true;
       hasWarnedOnce = true;
       stopWatch.Stop();
-      Popup.Show(msg);
+      if (StratOptions.EnablePopupWarnings)
+      {
+        Popup.Show(msg);
+      }
+      else
+      {
+        XRL.Messages.MessageQueue.AddPlayerMessage(msg);
+      }
       stopWatch.Start();
     }
 
     public void WarnIfNeeded()
     {
       UpdateElapsedTime();
-      // todo this should be in some kind of update/render method?
       TimeSpan timeLeft = totalTime - elapsedTime;
       if (!hasEverWarned)
       {
-        WarnWithPopup($"Congrats on choosing play a real-time limited daily run!\n\nYou have {FormatTimeLeft()} of real time to get as far as you can.\nWhen the timer runs out your character will be sent to the shadow realm so beware.\n\nFeel free to save the run and come back to it later (that'll pause the timer).");
+        Warn($"You have {FormatTimeLeft()} (hours:minutes) left on the clock.\n\nBEWARE, when the timer runs out your character will die..\n\nFeel free to save and quit and come back later (that'll pause the timer).\n\nLet me know if you find any bugs!\n\n- strategineer");
       }
       else if (timeLeft.TotalMinutes <= 0)
       {
-        WarnWithPopup($"Daily run over...\n\nGlad you made it this far buddy.\n\nSending you to the shadow realm promptly.");
+        Warn($"Time's up...\n\nGlad you made it this far.\n\nSending you to the shadow realm ASAP.");
         // todo change the death to something else because being decapitated is an achievement
         Axe_Decapitate.Decapitate(The.Player, The.Player);
       }
@@ -106,11 +86,11 @@ namespace Strategineer.TimedDailyRuns
       {
         if (timeLeft.Minutes < 5)
         {
-          WarnWithPopup($"{FormatTimeLeft()} left for this daily run...\n\nWrap it up!");
+          Warn($"{FormatTimeLeft()} left...\n\nWrap it up!");
         }
         else
         {
-          WarnWithPopup($"{FormatTimeLeft()} left for this daily run...\n\nGood Luck!");
+          Warn($"{FormatTimeLeft()} left...\n\nGood Luck!");
         }
       }
     }
@@ -148,15 +128,6 @@ namespace Strategineer.TimedDailyRuns
       return base.HandleEvent(E);
     }
   }
-  [PlayerMutator]
-  public class TimedDailyRunsPlayerMutator : IPlayerMutator
-  {
-    public void mutate(GameObject player)
-    {
-      if (The.Game.gameMode == "Daily")
-      {
-        player.AddPart<TimedDailyRunsPart>();
-      }
-    }
-  }
+
+
 }

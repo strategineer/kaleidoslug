@@ -1,0 +1,9 @@
+{
+    "id": "Strategineer_RaceAgainstTime",
+    "title": "{{W|Race Against Time}}",
+    "description": "Race against the clock!\n\nYou've got a limited amount of real time to get as far as possible in your run.\n\nInspired by Rogue Rat's (https://www.youtube.com/@Rogue_Rat) daily runs where he limits himself to playing 1 hour to get as many points as he can.",
+    "version": "0.1.1",
+    "author": "strategineer",
+    "tags": "Challenge",
+    "PreviewImage": "preview.png"
+}
