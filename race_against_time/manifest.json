@@ -1,7 +1,7 @@
 {
     "id": "Strategineer_RaceAgainstTime",
     "title": "{{W|Race Against Time}}",
-    "description": "Race against the clock!\n\nYou've got a limited amount of real time to get as far as possible in your run.\n\nInspired by Rogue Rat's (https://www.youtube.com/@Rogue_Rat) daily runs where he limits himself to playing 1 hour to get as many points as he can.",
+    "description": "Race against the clock!\n\nYou've got a limited amount of real time to get as far as possible in your run.\n\nInspired by Rogue Rat's (https://www.youtube.com/@Rogue_Rat) daily runs where he limits himself to playing 1 hour to get as many points as he can.\n\nThe mod defaults to being enabled only for daily runs (configurable) with a 1 hour time limit (configurable), with warnings every 15 minutes (configurable) and with the timer running out leading to the character's death (configurable).\n\nLet me know if you find any bugs!",
     "version": "0.1.1",
     "author": "strategineer",
     "tags": "Challenge",
