@@ -4,7 +4,8 @@ using System.Diagnostics;
 using XRL;
 using XRL.UI;
 using XRL.World;
-using XRL.World.Parts.Skill;
+using XRL.Liquids;
+using XRL.World.Parts;
 
 namespace Strategineer.RaceAgainstTime
 {
@@ -133,7 +134,7 @@ namespace Strategineer.RaceAgainstTime
         if (StratOptions.EnableKillPlayerCharacterWhenTimerRunsOut)
         {
           Warn($"The beeping from the collar stops, only to be replaced by a loud electrical humming. \n\n\"Thank you for your service.\"");
-          Axe_Decapitate.Decapitate(The.Player, The.Player);
+          The.Player.Die(The.Player, "race against time collar", "You exploded.", The.Player.It + " @@exploded.");
         }
         else
         {
