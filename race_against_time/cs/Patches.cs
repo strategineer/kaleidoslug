@@ -42,15 +42,25 @@ The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
     [HarmonyPatch(typeof(PlayerStatusBar), "Update")]
     class AddPatch
     {
-      [HarmonyPostfix]
-      static void Postfix(PlayerStatusBar __instance)
+
+      static void UpdateTimerUI(PlayerStatusBar instance)
       {
         if (The.Player != null &&
         The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
         {
           // todo only do this if the time has changed
-          __instance.PlayerNameText.SetText(part.FormatTimeLeft(false));
+          instance.PlayerNameText.SetText(part.FormatTimeLeft(false));
         }
+      }
+      [HarmonyPrefix]
+      static void Prefix(PlayerStatusBar __instance)
+      {
+        UpdateTimerUI(__instance);
+      }
+      [HarmonyPostfix]
+      static void Postfix(PlayerStatusBar __instance)
+      {
+        UpdateTimerUI(__instance);
       }
     }
 
