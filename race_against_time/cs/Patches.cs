@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
-
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Qud.UI;
 using XRL;
 using XRL.UI;
@@ -15,29 +15,37 @@ namespace Strategineer.RaceAgainstTime
     [HarmonyPatch("ShowOptionList")]
     public static void Prefix(IList<string> Options)
     {
-      string[] optionsArray = (string[])Options;
-      if (The.Player != null &&
-The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
+      try
       {
-        if (optionsArray.Contains("Key Mapping"))
+        string[] optionsArray = (string[])Options;
+        if (The.Player != null &&
+  The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
         {
-          part.StopStopwatch();
+          if (optionsArray.Contains("Key Mapping"))
+          {
+            part.StopStopwatch();
+          }
         }
       }
+      catch { }
     }
     [HarmonyPostfix]
     [HarmonyPatch("ShowOptionList")]
     public static void Postfix(IList<string> Options)
     {
-      string[] optionsArray = (string[])Options;
-      if (The.Player != null &&
-The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
+      try
       {
-        if (optionsArray.Contains("Key Mapping"))
+        string[] optionsArray = (string[])Options;
+        if (The.Player != null &&
+  The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
         {
-          part.StartStopwatch();
+          if (optionsArray.Contains("Key Mapping"))
+          {
+            part.StartStopwatch();
+          }
         }
       }
+      catch { }
     }
     [HarmonyPatch(typeof(PlayerStatusBar), "Update")]
     class AddPatch
@@ -45,12 +53,16 @@ The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
 
       static void UpdateTimerUI(PlayerStatusBar instance)
       {
-        if (The.Player != null &&
-        The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
+        try
         {
-          // todo only do this if the time has changed
-          instance.PlayerNameText.SetText(part.FormatTimeLeft(false));
+          if (The.Player != null &&
+          The.Player.GetPart("RaceAgainstTimePart") is RaceAgainstTimePart part)
+          {
+            // todo only do this if the time has changed
+            instance.PlayerNameText.SetText(part.FormatTimeLeft(false));
+          }
         }
+        catch { }
       }
       [HarmonyPrefix]
       static void Prefix(PlayerStatusBar __instance)
